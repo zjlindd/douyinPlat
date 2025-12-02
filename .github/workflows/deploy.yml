@@ -1,0 +1,22 @@
+name: Deploy to Amazon Linux
+on:
+  push:
+    branches: [ main ] # 指定触发部署的分支
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH and Deploy
+        uses: appleboy/ssh-action@v1.0.3 # 一个流行的SSH连接Action
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # 切换到项目目录并执行部署脚本
+            cd /home/ec2-user/my-app
+            ./deploy.sh
