@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>在线估值工具</title>
+  
+  <script>
+    // rem基准值设置：基于375px设计稿，1rem = 37.5px
+    (function() {
+      function setRem() {
+        const designWidth = 375; // 设计稿宽度
+        const baseSize = 37.5; // 基准值（1rem = 37.5px）
+        const scale = document.documentElement.clientWidth / designWidth;
+        document.documentElement.style.fontSize = baseSize * Math.min(scale, 2) + 'px';
+      }
+      setRem();
+      window.addEventListener('resize', setRem);
+      window.addEventListener('orientationchange', setRem);
+    })();
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

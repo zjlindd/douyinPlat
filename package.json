@@ -1,0 +1,40 @@
+{
+  "name": "plate-valuation-h5",
+  "version": "1.0.0",
+  "description": "车牌在线估值H5应用",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "plate",
+    "valuation",
+    "h5",
+    "web",
+    "vue3",
+    "typescript",
+    "车牌估值"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "canvas-confetti": "^1.9.4",
+    "element-plus": "^2.11.8",
+    "vue": "^3.4.21",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "terser": "^5.44.1",
+    "typescript": "^5.4.5",
+    "unplugin-vue-components": "^30.0.0",
+    "vite": "^5.2.0",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-externals": "^0.6.2",
+    "vue-demi": "^0.14.7",
+    "vue-tsc": "^2.0.6"
+  }
+}
