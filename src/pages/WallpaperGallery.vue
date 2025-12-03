@@ -125,6 +125,7 @@ const stopAutoPlay = () => {
 }
 
 onMounted(() => {
+  document.body.style.overflow = 'hidden'
   // 自动隐藏提示
   setTimeout(() => {
     showInstruction.value = false
@@ -135,6 +136,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  document.body.style.overflow = ''
   stopAutoPlay()
 })
 </script>

@@ -180,7 +180,7 @@ const handleQuery = async (input: string) => {
   position: relative;
   z-index: 1;
   flex-shrink: 0;
-  padding-top: 4px;
+  padding-top: 20px;
 }
 
 .title {

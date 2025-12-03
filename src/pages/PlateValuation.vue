@@ -426,7 +426,6 @@ const handleRetry = () => {
   background-image: radial-gradient(#fde047 2px, transparent 2px);
   background-size: 20px 20px;
   overflow-x: hidden;
-  padding-bottom: 10px;
 }
 
 .container {

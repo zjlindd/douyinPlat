@@ -75,22 +75,22 @@
         </div>
       </div>
     </div>
-
-    <div class="footer-tip">
-      <p>温馨提示：所有估值结果仅供娱乐，切勿当真！</p>
-    </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const router = useRouter()
 const isUnlocked = ref(false)
 const password = ref('')
 const showError = ref(false)
+
+onUnmounted(() => {
+  document.body.style.overflow = ''
+})
 
 const checkPassword = () => {
   showError.value = false
@@ -124,6 +124,7 @@ const goToWallpaper = () => {
 }
 
 onMounted(() => {
+  document.body.style.overflow = 'hidden'
   const unlocked = localStorage.getItem('app_unlocked')
   if (unlocked === 'true') {
     isUnlocked.value = true
@@ -159,7 +160,8 @@ onMounted(() => {
 
 <style scoped>
 .home-page {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background-color: #f0f9ff;
   background-image: radial-gradient(#bae6fd 2px, transparent 2px);
   background-size: 20px 20px;
@@ -267,7 +269,8 @@ onMounted(() => {
 }
 
 .home-container {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
