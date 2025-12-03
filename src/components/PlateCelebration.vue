@@ -2,12 +2,12 @@
   
   <Transition name="celebration-fade">
     <div v-if="visible" class="celebration-overlay" :class="`grade-${level}`" @click="handleClick">
-      <!-- 极品：满屏庆祝动画 -->
-      <template v-if="level === '极品'">
+      <!-- 神豪：满屏庆祝动画 -->
+      <template v-if="level === '神豪'">
         <div class="celebration-content">
           <div class="celebration-title grade-excellent">
             <span class="title-text">🎉 恭喜！</span>
-            <span class="subtitle-text">发现极品车牌！</span>
+            <span class="subtitle-text">发现神豪车牌！</span>
           </div>
         </div>
         <div
@@ -20,12 +20,12 @@
         </div>
       </template>
 
-      <!-- 优秀：优雅闪光动画 -->
-      <template v-else-if="level === '优秀'">
+      <!-- 土豪：优雅闪光动画 -->
+      <template v-else-if="level === '土豪'">
         <div class="celebration-content">
           <div class="celebration-title grade-great">
             <span class="title-text">✨ 很棒！</span>
-            <span class="subtitle-text">发现优秀车牌！</span>
+            <span class="subtitle-text">发现土豪车牌！</span>
           </div>
         </div>
         <div
@@ -38,12 +38,12 @@
         </div>
       </template>
 
-      <!-- 良好：温和动画 -->
-      <template v-else-if="level === '良好'">
+      <!-- 老板：温和动画 -->
+      <template v-else-if="level === '老板'">
         <div class="celebration-content">
           <div class="celebration-title grade-good">
             <span class="title-text">👍 不错！</span>
-            <span class="subtitle-text">发现良好车牌！</span>
+            <span class="subtitle-text">发现老板车牌！</span>
           </div>
         </div>
         <div
@@ -60,7 +60,7 @@
       <template v-else>
         <div class="celebration-content">
           <div class="celebration-title grade-normal">
-            <span class="title-text">🚗 普通车牌</span>
+            <span class="title-text">🚗 大众车牌</span>
             <span class="subtitle-text">继续寻找更好的吧！</span>
           </div>
         </div>

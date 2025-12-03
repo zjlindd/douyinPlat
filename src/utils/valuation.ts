@@ -609,49 +609,49 @@ export function calculatePlateValue(plateNumber: string): ValuationResult {
   let animationLevel = 0
   
   if (finalValue >= 100000) {
-    level = '极品'
+    level = '神豪'
     stars = 5
     comment = '🌟 超级罕见车牌，价值百万级，极具收藏价值！'
     animationLevel = 5 // 最高级动画
   } else if (finalValue >= 50000) {
-    level = '极品'
+    level = '神豪'
     stars = 5
     comment = '🌟 罕见车牌，价值数十万，极具收藏价值！'
     animationLevel = 4 // 第四级动画
   } else if (finalValue >= 30000) {
-    level = '优秀'
+    level = '土豪'
     stars = 4
     comment = '✨ 非常不错的车牌号，价值很高，很有特色！'
     animationLevel = 3 // 第三级动画
   } else if (finalValue >= 20000) {
-    level = '优秀'
+    level = '土豪'
     stars = 4
     comment = '✨ 非常不错的车牌号，很有特色！'
     animationLevel = 2 // 第二级动画
   } else if (finalValue >= 10000) {
-    level = '良好'
+    level = '老板'
     stars = 3
     comment = '👍 不错的车牌号，组合很好！'
     animationLevel = 1 // 第一级动画
   } else if (finalValue >= 6000) {
-    level = '良好'
+    level = '老板'
     stars = 3
     comment = '👍 车牌号不错，有独特之处！'
     animationLevel = 0 // 无动画
   } else if (finalValue >= 4000) {
-    level = '中等'
+    level = '精英'
     stars = 2
     comment = '👍 车牌号还可以，有亮点！'
     animationLevel = 0 // 无动画
   } else {
-    level = '一般'
+    level = '平民'
     stars = 1
     comment = '👍 车牌号不错，简洁易记！'
     animationLevel = 0 // 无动画
   }
 
   // 针对极品车牌放大展示价值（用户需求：再扩大10倍）
-  if (level === '极品') {
+  if (level === '神豪') {
     displayValue = finalValue * 10
     factors.push('极品车牌价值放大展示（十倍加成）')
   }

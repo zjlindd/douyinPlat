@@ -360,12 +360,12 @@ const queryValuation = () => {
     const locationName = plateInfo.city || (plateInfo.province ? plateInfo.province.fullName : '未知地区')
     
     const levelClassMap: Record<string, string> = {
-      '极品': 'excellent',
-      '优秀': 'great',
-      '良好': 'good',
-      '中等': 'medium',
-      '一般': 'normal',
-      '普通': 'common'
+      '神豪': 'excellent',
+      '土豪': 'great',
+      '老板': 'good',
+      '精英': 'medium',
+      '平民': 'normal',
+      '大众': 'common'
     }
     
     const plateForDisplay = formattedPlate || plateNumber || ''
@@ -440,7 +440,7 @@ const handleRetry = () => {
 /* 标题区域 */
 .header {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .main-title {
@@ -457,17 +457,18 @@ const handleRetry = () => {
 }
 
 .subtitle {
-  font-size: 10px;
+  font-size: 13px;
   color: #000;
   font-weight: 700;
   background: #fff;
   display: inline-block;
   padding: 4px 8px;
-  border: 2px solid #000;
+  border: 2px solid #f60707;
   border-radius: 16px;
   box-shadow: 2px 2px 0px #000;
-  margin-top: 2px;
+  margin-top: 10px;
   line-height: 1.4;
+  font-weight: bold;
 }
 
 .floating-switch {
@@ -529,7 +530,6 @@ const handleRetry = () => {
 
 /* Tip Section */
 .tip-section {
-  margin-top: 10px;
   text-align: center;
   padding: 0 10px;
 }
@@ -565,7 +565,7 @@ const handleRetry = () => {
   box-shadow: 3px 3px 0px #000;
   cursor: pointer;
   transition: all 0.1s;
-  width: 80%;
+  width: 40%;
   max-width: 300px;
 }
 

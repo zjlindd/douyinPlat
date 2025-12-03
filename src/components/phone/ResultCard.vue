@@ -73,7 +73,7 @@ defineProps<{
   border: 3px solid #000;
   border-radius: 16px;
   box-shadow: 4px 4px 0px #000;
-  margin: 10px auto;
+  margin: 20px auto;
   padding: 12px;
   transition: transform 0.1s;
   overflow: visible;
@@ -216,7 +216,7 @@ defineProps<{
 }
 
 .box-content {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.4;
   color: #1f2937;
@@ -229,7 +229,7 @@ defineProps<{
 
 @media (max-width: 480px) {
   .price-value {
-    font-size: 22px;
+    font-size: 28px;
   }
   .highlight-value {
     font-size: 18px;
