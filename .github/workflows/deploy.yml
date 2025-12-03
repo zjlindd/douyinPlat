@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # 切换到项目目录并执行部署脚本
-            cd /home/ec2-user/my-app
+            cd /home/ec2-user/my-app/douyinPlat/
             # 拉取最新的代码
             git pull origin main
             # 安装依赖
