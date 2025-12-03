@@ -473,7 +473,7 @@ const handleRetry = () => {
 .floating-switch {
   position: fixed;
   bottom: 60px;
-  right: -86px;
+  right: -50px; /* 露出图标，方便点击 */
   z-index: 999;
   background: #fff;
   padding: 6px 10px 6px 14px;
@@ -485,9 +485,10 @@ const handleRetry = () => {
   align-items: center;
   justify-content: flex-start;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 }
 
-.floating-switch:hover {
+.floating-switch:hover, .floating-switch:active {
   right: -2px;
   padding-right: 14px;
 }

@@ -82,6 +82,7 @@ const handleQuery = () => {
   width: 85%;
   margin: 0 auto;
   padding: 0 12px;
+  margin-top: 10px
 }
 
 .phone-input {
