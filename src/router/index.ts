@@ -4,6 +4,7 @@ const PlateValuation = () => import('../pages/PlateValuation.vue')
 const PhoneValuation = () => import('../pages/PhoneValuation.vue')
 const NameScoring = () => import('../pages/NameScoring.vue')
 const TextTexture = () => import('../pages/TextTexture.vue')
+const WallpaperGallery = () => import('../pages/WallpaperGallery.vue')
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
     path: '/text-texture',
     name: 'TextTexture',
     component: TextTexture
+  },
+  {
+    path: '/wallpaper',
+    name: 'WallpaperGallery',
+    component: WallpaperGallery
   }
 ]
 

@@ -18,7 +18,7 @@
         <p v-if="showError" class="error-msg">密码错误，请重试</p>
         <div class="contact-info">
           <p>没有密码？请联系管理员</p>
-          <p class="wechat-id">微信号: 17671759692</p>
+          <p class="wechat-id">微信号: zjl_zmr</p>
         </div>
       </div>
     </div>
@@ -63,6 +63,15 @@
         <p class="card-desc">输入姓名与样式，生成创意图片</p>
         <div class="card-footer">
           <span class="card-link">立即使用 →</span>
+        </div>
+      </div>
+
+      <div class="service-card wallpaper-card" @click="goToWallpaper">
+        <div class="card-icon">🦊</div>
+        <h2 class="card-title">精选壁纸</h2>
+        <p class="card-desc">疯狂动物城高清壁纸，轮播展示</p>
+        <div class="card-footer">
+          <span class="card-link">立即查看 →</span>
         </div>
       </div>
     </div>
@@ -110,6 +119,10 @@ const goToTexture = () => {
   router.push('/text-texture')
 }
 
+const goToWallpaper = () => {
+  router.push('/wallpaper')
+}
+
 onMounted(() => {
   const unlocked = localStorage.getItem('app_unlocked')
   if (unlocked === 'true') {
@@ -123,6 +136,7 @@ onMounted(() => {
     import('../pages/PhoneValuation.vue')
     import('../pages/NameScoring.vue')
     import('../pages/TextTexture.vue')
+    import('../pages/WallpaperGallery.vue')
     const links = [
       { href: '/assets/5.png', as: 'image' }
     ]
@@ -257,27 +271,27 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
+  justify-content: flex-start;
+  padding: 16px 12px;
   box-sizing: border-box;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .main-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 900;
   color: #0c4a6e;
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
   text-shadow: 3px 3px 0px #38bdf8;
   transform: rotate(-2deg);
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 12px;
   color: #0369a1;
   font-weight: 700;
 }
@@ -285,7 +299,7 @@ onMounted(() => {
 .services-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 10px;
   max-width: 600px;
   width: 100%;
   margin: 0 auto;
@@ -293,27 +307,27 @@ onMounted(() => {
 
 .service-card {
   background: #fff;
-  border: 3px solid #000;
-  border-radius: 16px;
-  padding: 16px;
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 12px;
   cursor: pointer;
   transition: all 0.1s;
-  box-shadow: 4px 4px 0px #000;
+  box-shadow: 3px 3px 0px #000;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  min-height: 140px;
+  min-height: 110px;
   position: relative;
 }
 
 .service-card:hover {
-  transform: translate(2px, 2px);
+  transform: translate(1px, 1px);
   box-shadow: 2px 2px 0px #000;
 }
 
 .service-card:active {
-  transform: translate(4px, 4px);
+  transform: translate(3px, 3px);
   box-shadow: none;
 }
 
@@ -322,32 +336,37 @@ onMounted(() => {
 .phone-card { background: #fdf4ff; }
 .name-card { background: #fff7ed; }
 .texture-card { background: #f0fdf4; }
+.wallpaper-card { background: #fffbeb; }
 
 .card-icon {
-  font-size: 36px;
-  margin-bottom: 8px;
+  font-size: 28px;
+  margin-bottom: 6px;
   filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.2));
   animation: bounce 2s infinite;
 }
 
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  50% { transform: translateY(-4px); }
 }
 
 .card-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 900;
   color: #000;
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0;
 }
 
 .card-desc {
-  font-size: 12px;
+  font-size: 11px;
   color: #444;
   font-weight: 600;
-  line-height: 1.4;
-  margin-bottom: 12px;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .card-footer {
@@ -358,12 +377,12 @@ onMounted(() => {
 .card-link {
   display: block;
   width: 100%;
-  padding: 6px 0;
+  padding: 4px 0;
   background: #000;
   color: #fff;
   font-weight: 700;
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: 6px;
+  font-size: 11px;
   transition: all 0.2s;
 }
 
@@ -375,22 +394,22 @@ onMounted(() => {
 .footer-tip {
   text-align: center;
   color: #0369a1;
-  font-size: 12px;
-  margin-top: 24px;
+  font-size: 11px;
+  margin-top: 16px;
   font-weight: 600;
   background: #fff;
-  padding: 6px 12px;
+  padding: 4px 10px;
   border: 2px solid #000;
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: 2px 2px 0px #000;
 }
 
 @media (max-width: 480px) {
   .services-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 10px;
   }
   
-  .main-title { font-size: 28px; }
+  .main-title { font-size: 24px; }
 }
 </style>
