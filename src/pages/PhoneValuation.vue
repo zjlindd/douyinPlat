@@ -46,12 +46,18 @@
           style="--el-switch-on-color: #10b981; --el-switch-off-color: #ef4444;"
         />
       </div>
+
+      <!-- 音乐播放控制 -->
+      <div class="music-control" @click="toggleMusic" :class="{ 'is-playing': isPlaying }">
+        <span class="music-icon" :class="{ spinning: isPlaying }">🎵</span>
+      </div>
+      <audio ref="audioRef" loop preload="auto" src="/assets/hello.mp3"></audio>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted, onMounted } from 'vue'
 const GlobalEP: any = (window as any).ElementPlus
 import PhoneInput from '../components/phone/PhoneInput.vue'
 import { defineAsyncComponent } from 'vue'
@@ -69,6 +75,40 @@ const showCelebration = ref(false)
 const currentGrade = ref<GradeType | undefined>(undefined)
 const cache = ref(new Map<string, TailNumberAnalysis>())
 const phoneInput = ref('')
+
+// 音乐播放相关
+const isPlaying = ref(false)
+const audioRef = ref<HTMLAudioElement | null>(null)
+
+const toggleMusic = () => {
+  if (!audioRef.value) return
+  
+  if (isPlaying.value) {
+    audioRef.value.pause()
+    isPlaying.value = false
+  } else {
+    audioRef.value.play().then(() => {
+      isPlaying.value = true
+    }).catch(err => {
+      console.error('播放失败:', err)
+    })
+  }
+}
+
+onMounted(() => {
+  // 尝试自动播放
+  if (audioRef.value) {
+    audioRef.value.volume = 0.6 // 设置合适音量
+    const playPromise = audioRef.value.play()
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        isPlaying.value = true
+      }).catch(error => {
+        console.log('自动播放被阻止，需要用户交互:', error)
+      })
+    }
+  }
+})
 
 // 自动演示相关
 const isAutoMode = ref(false)
@@ -180,7 +220,7 @@ const handleQuery = async (input: string) => {
   position: relative;
   z-index: 1;
   flex-shrink: 0;
-  padding-top: 35px;
+  padding-top: 50px;
 }
 
 .title {
@@ -285,6 +325,50 @@ const handleQuery = async (input: string) => {
 .floating-switch:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0px #000;
+}
+
+.music-control {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.music-control:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.music-control.is-playing {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.music-icon {
+  font-size: 20px;
+  display: inline-block;
+  user-select: none;
+}
+
+.spinning {
+  animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @media (max-width: 480px) {

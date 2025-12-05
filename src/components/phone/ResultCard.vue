@@ -38,7 +38,7 @@
         <div class="cartoon-box suggestion-box">
           <div class="box-title">
             <span class="icon">💡</span>
-            <span>建议</span>
+            <span>评价</span>
           </div>
           <div class="box-content">{{ analysis.suggestion }}</div>
         </div>

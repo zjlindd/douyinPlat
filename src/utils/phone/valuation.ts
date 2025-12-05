@@ -7,36 +7,36 @@ const GRADE_INFO: Record<Grade, GradeInfo> = {
     level: Grade.S,
     name: '至尊',
     color: '#FF6B6B',
-    minPrice: 5000,
-    maxPrice: 10000
+    minPrice: 8000,
+    maxPrice: 16000
   },
   [Grade.A]: {
     level: Grade.A,
     name: '极品',
     color: '#4ECDC4',
-    minPrice: 2000,
-    maxPrice: 5000
+    minPrice: 3500,
+    maxPrice: 8000
   },
   [Grade.B]: {
     level: Grade.B,
     name: '优秀',
     color: '#45B7D1',
-    minPrice: 500,
-    maxPrice: 2000
+    minPrice: 800,
+    maxPrice: 3500
   },
   [Grade.C]: {
     level: Grade.C,
     name: '普通',
     color: '#96CEB4',
-    minPrice: 100,
-    maxPrice: 500
+    minPrice: 150,
+    maxPrice: 800
   },
   [Grade.D]: {
     level: Grade.D,
     name: '普通',
     color: '#FFEAA7',
     minPrice: 0,
-    maxPrice: 100
+    maxPrice: 150
   }
 }
 
@@ -47,43 +47,77 @@ function detectPattern(tailNumber: string): { pattern: NumberPattern; descriptio
   const digits = tailNumber.split('').map(Number)
   const [a, b, c, d] = digits
 
+  // 1. 特殊寓意号码 (优先匹配)
+  if (tailNumber === '1314') return { pattern: '1314', description: '一生一世' }
+  if (tailNumber === '1688') return { pattern: '1688', description: '一路发发' }
+  if (tailNumber === '5200' || tailNumber === '5201' || tailNumber.startsWith('520')) return { pattern: 'LOVE', description: '爱情号' }
+  
+  // 2. 结构模式
   // AAAA: 四连号 (如 8888)
   if (a === b && b === c && c === d) {
     return { pattern: 'AAAA', description: '四连号' }
   }
 
-  // ABAB: 交替重复 (如 6868)
-  if (a === c && b === d && a !== b) {
-    return { pattern: 'ABAB', description: '交替重复' }
-  }
+  // ABCD / DCBA
+  const isAscending = digits[0]! + 1 === digits[1]! && digits[1]! + 1 === digits[2]! && digits[2]! + 1 === digits[3]!
+  const isDescending = digits[0]! - 1 === digits[1]! && digits[1]! - 1 === digits[2]! && digits[2]! - 1 === digits[3]!
+  
+  if (isAscending) return { pattern: 'ABCD', description: '步步高升' }
+  if (isDescending) return { pattern: 'DCBA', description: '倒顺子' }
 
   // AABB: 对子 (如 6688)
   if (a === b && c === d && a !== c) {
-    return { pattern: 'AABB', description: '对子' }
+    return { pattern: 'AABB', description: '双双对对' }
   }
 
-  // ABCD: 顺子 (如 1234, 9876)
-  if (digits.length === 4) {
-    const isAscending = digits[0]! + 1 === digits[1]! && digits[1]! + 1 === digits[2]! && digits[2]! + 1 === digits[3]!
-    const isDescending = digits[0]! - 1 === digits[1]! && digits[1]! - 1 === digits[2]! && digits[2]! - 1 === digits[3]!
-    if (isAscending || isDescending) {
-      return { pattern: 'ABCD', description: '顺子' }
-    }
+  // ABAB: 交替重复 (如 6868)
+  if (a === c && b === d && a !== b) {
+    return { pattern: 'ABAB', description: '交替号' }
   }
 
-  // AAAB: 三连号 (如 8881)
+  // ABBA: 镜像 (如 1221)
+  if (a === d && b === c && a !== b) {
+    return { pattern: 'ABBA', description: '镜像号' }
+  }
+
+  // BAAA: 尾三连 (如 1888) - 价值很高
+  if (a !== b && b === c && c === d) {
+    return { pattern: 'BAAA', description: '尾三连' }
+  }
+
+  // AAAB: 头三连 (如 8881)
   if (a === b && b === c && c !== d) {
-    return { pattern: 'AAAB', description: '三连号' }
+    return { pattern: 'AAAB', description: '头三连' }
   }
 
-  // AABC: 前两位重复 (如 8812)
-  if (a === b && a !== c && c !== d) {
-    return { pattern: 'AABC', description: '前两位重复' }
+  // AABA: 夹心 (如 8818)
+  if (a === b && b === d && a !== c) {
+    return { pattern: 'AABA', description: '夹心号' }
   }
 
-  // ABAC: 首尾相同 (如 8182)
-  if (a === c && a !== b && b !== d) {
-    return { pattern: 'ABAC', description: '首尾相同' }
+  // ABAA: 夹心 (如 8188)
+  if (a === c && c === d && a !== b) {
+    return { pattern: 'ABAA', description: '夹心号' }
+  }
+
+  // AABC: 前对子
+  if (a === b && b !== c && c !== d && a !== c) {
+    return { pattern: 'AABC', description: '前对子' }
+  }
+
+  // ABBC: 中对子
+  if (a !== b && b === c && c !== d && b !== d && a !== c) {
+    return { pattern: 'ABBC', description: '中对子' }
+  }
+
+  // ABCC: 后对子
+  if (a !== b && b !== c && c === d && a !== c && b !== d) {
+    return { pattern: 'ABCC', description: '后对子' }
+  }
+
+  // 年份号 (19xx, 20xx)
+  if ((a === 1 && b === 9) || (a === 2 && b === 0)) {
+    return { pattern: 'YEAR', description: '年份号' }
   }
 
   return { pattern: 'NORMAL', description: '普通' }
@@ -103,12 +137,12 @@ function calculateSpecialBonus(tailNumber: string): number {
   const count4 = digits.filter(d => d === '4').length
 
   // 包含8、6、9的加成
-  if (count8 > 0) bonus += 0.2 * count8
+  if (count8 > 0) bonus += 0.25 * count8
   if (count6 > 0) bonus += 0.2 * count6
   if (count9 > 0) bonus += 0.2 * count9
 
   // 包含4的减成
-  if (count4 > 0) bonus -= 0.1 * count4
+  if (count4 > 0) bonus -= 0.15 * count4
 
   // 全偶数加成
   const allEven = digits.every(d => Number(d) % 2 === 0)
@@ -127,14 +161,27 @@ function calculateSpecialBonus(tailNumber: string): number {
 function getGradeByPattern(pattern: NumberPattern): Grade {
   switch (pattern) {
     case 'AAAA':
-    case 'ABAB':
-    case 'AABB':
+    case '1314':
+    case '1688':
+    case 'LOVE':
     case 'ABCD':
       return Grade.S
-    case 'AAAB':
-    case 'AABC':
-    case 'ABAC':
+    case 'ABAB':
+    case 'AABB':
+    case 'BAAA': // 尾三连价值很高，如1888
+    case 'ABBA':
+    case 'DCBA':
       return Grade.A
+    case 'AAAB':
+    case 'AABA':
+    case 'ABAA':
+      return Grade.B
+    case 'AABC':
+    case 'ABBC':
+    case 'ABCC':
+    case 'YEAR':
+    case 'ABAC':
+      return Grade.C
     case 'NORMAL':
       // 普通模式需要进一步判断
       return Grade.C
@@ -176,6 +223,7 @@ export function analyzeTailNumber(tailNumber: string): TailNumberAnalysis {
   return {
     tailNumber,
     pattern: description,
+    patternType: pattern,
     grade,
     gradeInfo,
     price,
