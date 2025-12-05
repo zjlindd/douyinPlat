@@ -1,50 +1,65 @@
 <template>
   <div class="phone-page">
     <div class="app-container">
-      <div class="header">
-        <h1 class="title">寻找10年以上过万尾号</h1>
+      <!-- 水墨背景层 -->
+      <div class="ink-bg"></div>
+      <div class="ink-overlay"></div>
+
+      <!-- 主要内容区域（输入态） -->
+      <div class="main-content" :class="{ 'has-result': !!result }">
+        <div class="header">
+          <h1 class="title">数字能量 ‧ 运势详解</h1>
+          <p class="subtitle">万物皆有数，一测便知吉凶</p>
+        </div>
+
+        <PhoneInput
+          v-model="phoneInput"
+          :loading="loading"
+          @query="handleQuery"
+        />
+
+        <el-skeleton v-if="loading" :rows="3" animated style="margin-top: 20px; --el-skeleton-color: rgba(255,255,255,0.2);" />
+
+        <el-alert
+          v-if="error"
+          :title="error"
+          type="error"
+          :closable="false"
+          show-icon
+          style="max-width: 100%; margin: 12px auto; background: rgba(255,0,0,0.1); border: 1px solid rgba(255,0,0,0.2); color: #fff;"
+        />
       </div>
 
-      <PhoneInput
-        v-model="phoneInput"
-        :loading="loading"
-        @query="handleQuery"
-      />
+      <!-- 结果弹窗层 -->
+      <div v-if="result" class="result-overlay" @click.self="handleCloseResult">
+        <ResultCard :analysis="result" @close="handleCloseResult" />
+      </div>
 
-      <el-skeleton v-if="loading" :rows="3" animated style="margin-top: 10px;" />
-
-      <ResultCard v-if="result" :analysis="result" />
-
-      <el-alert
-        v-if="error"
-        :title="error"
-        type="error"
-        :closable="false"
-        show-icon
-        style="max-width: 100%; margin: 12px auto;"
-      />
-
-      <CelebrationAnimation
-        :visible="showCelebration"
-        :grade="currentGrade"
-        @close="showCelebration = false"
-      />
-
-      <div class="warm-tip">
-        温馨提示：手机号估值结果仅供娱乐，切勿当真！
+      <div class="live-notice-bar">
+        <div class="notice-content">
+          <span class="notice-item"><i class="icon">👍</i> 免费测算：点赞关注</span>
+          <span class="separator">|</span>
+          <span class="notice-item"><i class="icon">💖</i> 优先：3个小心心</span>
+          <span class="separator">|</span>
+          <span class="notice-item highlight"><i class="icon">🍭</i> 插队：棒棒糖</span>
+          <span class="separator">|</span>
+          <span class="notice-item highlight-vip"><i class="icon">🕶️</i> 立即安排：墨镜</span>
+        </div>
       </div>
 
       <!-- 悬浮开关 -->
-      <div class="floating-switch">
-        <span class="switch-icon">🤖</span>
-        <el-switch
-          v-model="isAutoMode"
-          inline-prompt
-          active-text="演示"
-          inactive-text="关"
-          @change="handleAutoSwitch"
-          style="--el-switch-on-color: #10b981; --el-switch-off-color: #ef4444;"
-        />
+      <div class="floating-switch" :class="{ expanded: isSwitchExpanded }" @click="toggleSwitchExpand">
+        <span class="switch-icon">🏮</span>
+        <div class="switch-content" @click.stop>
+          <el-switch
+            v-model="isAutoMode"
+            inline-prompt
+            active-text="演示"
+            inactive-text="关"
+            @change="handleAutoSwitch"
+            style="--el-switch-on-color: #c0392b; --el-switch-off-color: #7f8c8d;"
+          />
+        </div>
       </div>
 
       <!-- 音乐播放控制 -->
@@ -62,7 +77,6 @@ const GlobalEP: any = (window as any).ElementPlus
 import PhoneInput from '../components/phone/PhoneInput.vue'
 import { defineAsyncComponent } from 'vue'
 const ResultCard = defineAsyncComponent(() => import('../components/phone/ResultCard.vue'))
-const CelebrationAnimation = defineAsyncComponent(() => import('../components/phone/CelebrationAnimation.vue'))
 import { validateTailNumber, extractTailNumber } from '../utils/phone/phoneValidator'
 import { analyzeTailNumber } from '../utils/phone/valuation'
 import { generateSuggestion, generateBlessing } from '../utils/phone/suggestions'
@@ -71,8 +85,6 @@ import type { TailNumberAnalysis, Grade as GradeType } from '../types/phone'
 const loading = ref(false)
 const result = ref<TailNumberAnalysis | null>(null)
 const error = ref('')
-const showCelebration = ref(false)
-const currentGrade = ref<GradeType | undefined>(undefined)
 const cache = ref(new Map<string, TailNumberAnalysis>())
 const phoneInput = ref('')
 
@@ -112,27 +124,82 @@ onMounted(() => {
 
 // 自动演示相关
 const isAutoMode = ref(false)
+const isSwitchExpanded = ref(false)
 let autoTimer: any = null
+let isRunningLoop = false
+
+const toggleSwitchExpand = () => {
+  isSwitchExpanded.value = !isSwitchExpanded.value
+}
 
 const generateRandomTail = () => {
   return Math.floor(1000 + Math.random() * 9000).toString()
 }
 
-const startAutoRun = () => {
-  const run = () => {
-    const tail = generateRandomTail()
-    phoneInput.value = tail
-    handleQuery(tail)
+// 辅助函数：延迟
+const delay = (ms: number) => new Promise(resolve => {
+  autoTimer = setTimeout(resolve, ms)
+})
+
+// 模拟输入效果
+const simulateInput = async (text: string) => {
+  phoneInput.value = ''
+  for (let i = 0; i < text.length; i++) {
+    if (!isAutoMode.value) return
+    phoneInput.value += text[i]
+    await delay(200) // 模拟打字速度
   }
-  run()
-  autoTimer = setInterval(run, 5000)
+}
+
+const autoPlayLoop = async () => {
+  if (isRunningLoop) return
+  isRunningLoop = true
+  
+  while (isAutoMode.value) {
+    try {
+      // 1. 准备随机号码
+      const tail = generateRandomTail()
+      
+      // 2. 模拟输入
+      await simulateInput(tail)
+      if (!isAutoMode.value) break
+      
+      // 3. 稍微停顿一下再查询
+      await delay(500)
+      if (!isAutoMode.value) break
+
+      // 4. 触发查询
+      handleQuery(tail)
+      
+      // 5. 等待结果展示 5秒
+      await delay(5000)
+      if (!isAutoMode.value) break
+      
+      // 6. 关闭弹窗
+      handleCloseResult()
+      
+      // 7. 间隔 2秒 再开始下一轮
+      await delay(2000)
+    } catch (e) {
+      console.error('Auto play error:', e)
+      break
+    }
+  }
+  
+  isRunningLoop = false
+}
+
+const startAutoRun = () => {
+  autoPlayLoop()
 }
 
 const stopAutoRun = () => {
   if (autoTimer) {
-    clearInterval(autoTimer)
+    clearTimeout(autoTimer)
     autoTimer = null
   }
+  handleCloseResult()
+  phoneInput.value = ''
 }
 
 const handleAutoSwitch = (val: boolean) => {
@@ -145,14 +212,6 @@ const handleAutoSwitch = (val: boolean) => {
 
 onUnmounted(() => {
   stopAutoRun()
-})
-
-// 监听result变化，根据级别显示不同的动画
-watch(result, (newResult) => {
-  if (newResult) {
-    currentGrade.value = newResult.grade
-    showCelebration.value = newResult.grade === 'S' || newResult.grade === 'A'
-  }
 })
 
 const handleQuery = async (input: string) => {
@@ -168,7 +227,6 @@ const handleQuery = async (input: string) => {
 
   error.value = ''
   loading.value = true
-  showCelebration.value = false
 
   try {
     if (cache.value.has(tailNumber)) {
@@ -188,6 +246,10 @@ const handleQuery = async (input: string) => {
     loading.value = false
   }
 }
+
+const handleCloseResult = () => {
+  result.value = null
+}
 </script>
 
 <style scoped>
@@ -196,174 +258,262 @@ const handleQuery = async (input: string) => {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  background-color: #FEF9C3; /* Light yellow background */
+  background-color: #1a1a1a;
+  font-family: 'Noto Serif SC', serif;
 }
 
 .app-container {
   min-height: 100vh;
-  /* background-image: url('https://i.cetsteam.com/imgs/2025/11/29/49bda7adb7f2dfcc.webp'); */
-  background-color: #FEF9C3;
-  background-image: radial-gradient(#FDE047 2px, transparent 2px);
-  background-size: 20px 20px;
-  padding: 8px 12px;
+  background-color: #f5f5f0;
   position: relative;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden; /* 改为hidden，内容通过flex布局自适应 */
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 480px;
+  padding: 20px 16px 120px; /* 底部留白防止遮挡 */
 }
-.header {
-  text-align: center;
-  margin-bottom: 10px;
+
+/* 水墨背景层 */
+.ink-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1515096788709-a3cf4ce0a4a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.15;
+  z-index: 0;
+  pointer-events: none;
+  filter: grayscale(100%) contrast(1.2);
+}
+
+.ink-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, transparent 0%, rgba(20, 20, 20, 0.8) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 垂直居中 */
   position: relative;
   z-index: 1;
-  flex-shrink: 0;
-  padding-top: 50px;
+  padding-bottom: 60px; /* 视觉重心上移一点 */
+  transition: all 0.3s ease;
+}
+
+.main-content.has-result {
+  filter: blur(2px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
 }
 
 .title {
-  font-size: 28px;
-  font-weight: 900;
-  margin: 0 0 4px 0;
-  color: #fff;
-  -webkit-text-stroke: 2px #000;
-  text-shadow: 3px 3px 0px #000;
-  letter-spacing: 1px;
-  transform: rotate(-2deg);
-  display: inline-block;
+  font-family: 'Ma Shan Zheng', cursive;
+  font-size: 48px; /* 加大标题 */
+  font-weight: 400;
+  margin: 0 0 12px 0;
+  color: #c0392b;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  letter-spacing: 4px;
 }
 
 .subtitle {
-  font-size: 12px;
+  font-size: 16px;
   margin: 0;
-  opacity: 0.95;
-  font-weight: 700;
-  color: #000;
-  background: #fff;
-  padding: 2px 10px;
-  border: 2px solid #000;
-  border-radius: 20px;
-  display: inline-block;
-  box-shadow: 2px 2px 0px #000;
+  color: #555;
+  font-weight: 400;
+  letter-spacing: 2px;
+  opacity: 0.8;
 }
 
-.switch-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: #000;
-  background: #fff;
-  padding: 2px 8px;
-  border: 2px solid #000;
-  border-radius: 12px;
-  box-shadow: 2px 2px 0px #000;
+/* 结果弹窗层 */
+.result-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-.warm-tip {
+/* 直播互动公告栏 */
+.live-notice-bar {
   margin-top: auto;
-  text-align: center;
-  font-size: 12px;
-  color: #000;
-  padding: 8px 12px;
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 12px;
-  box-shadow: 3px 3px 0px #000;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  line-height: 1.4;
+  width: 100%;
+  height: 40px;
+  background: rgba(192, 57, 43, 0.1); /* 红色背景 */
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  border-radius: 20px;
+  overflow: hidden;
   position: relative;
-  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
   z-index: 1;
 }
 
-/* 移除伪元素，直接在内容里加图标更好，或者调整样式 */
-.warm-tip::before {
-  content: '💡';
-  margin-right: 6px;
+.notice-content {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: scroll-left 15s linear infinite;
+  padding-left: 100%; /* 从右侧开始 */
 }
 
-.warm-tip::after {
-  content: none;
+.notice-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
 }
 
+.notice-item .icon {
+  margin-right: 4px;
+  font-style: normal;
+}
+
+.notice-item.highlight {
+  color: #d35400;
+  font-weight: bold;
+}
+
+.notice-item.highlight-vip {
+  color: #c0392b;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.separator {
+  margin: 0 12px;
+  color: #ccc;
+  font-size: 12px;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* 悬浮开关样式调整 */
 .floating-switch {
   position: fixed;
-  bottom: 60px;
-  right: -50px; /* 露出图标，方便点击 */
-  z-index: 999;
-  background: #fff;
-  padding: 6px 10px 6px 14px;
-  border: 2px solid #000;
-  border-right: none;
-  border-radius: 30px 0 0 30px;
-  box-shadow: -2px 2px 0px #000;
+  right: 0;
+  bottom: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 8px 4px 8px 12px;
+  border-radius: 24px 0 0 24px;
+  box-shadow: -2px 2px 8px rgba(0,0,0,0.1);
   display: flex;
   align-items: center;
   justify-content: flex-start;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer; /* 增加手型 */
+  cursor: pointer;
+  z-index: 100;
+  border: 1px solid rgba(192, 57, 43, 0.2);
+  border-right: none;
+  width: 36px; /* 收起时的宽度，只显示灯笼 */
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.floating-switch:hover, .floating-switch:active {
-  right: -2px;
-  padding-right: 14px;
+.floating-switch.expanded {
+  width: 100px; /* 展开后的宽度 */
+  padding-right: 12px;
+}
+
+.floating-switch:hover {
+  background: #fff;
+  box-shadow: -2px 4px 12px rgba(192, 57, 43, 0.15);
 }
 
 .switch-icon {
-  font-size: 16px;
+  font-size: 18px;
+  margin-right: 0;
+  flex-shrink: 0;
+  filter: grayscale(0.1);
+  transition: all 0.3s ease;
+}
+
+.floating-switch.expanded .switch-icon {
   margin-right: 8px;
-  animation: bounce 2s infinite;
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+.switch-content {
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
 }
 
-.floating-switch:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px #000;
+.floating-switch.expanded .switch-content {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
 }
 
+/* 音乐播放器样式调整 */
 .music-control {
   position: fixed;
   top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(4px);
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 100;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px solid #c0392b; /* 中国红边框 */
   transition: all 0.3s ease;
 }
 
 .music-control:hover {
   transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.4);
+  background: #fff;
 }
 
 .music-control.is-playing {
-  background: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  background: #fff;
+  box-shadow: 0 0 20px rgba(192, 57, 43, 0.4);
 }
 
 .music-icon {
-  font-size: 20px;
-  display: inline-block;
-  user-select: none;
+  font-size: 9px;
+  color: #c0392b;
 }
 
 .spinning {
-  animation: spin 3s linear infinite;
+  animation: spin 4s linear infinite;
 }
 
 @keyframes spin {
@@ -373,21 +523,21 @@ const handleQuery = async (input: string) => {
 
 @media (max-width: 480px) {
   .app-container {
-    padding: 8px 12px;
+    padding: 16px 12px 100px;
     max-width: 100%;
   }
 
   .title {
-    font-size: 28px;
+    font-size: 40px;
   }
 
   .subtitle {
-    font-size: 12px;
+    font-size: 14px;
   }
-
-  .warm-tip {
-    font-size: 12px;
-    padding: 8px 12px;
+  
+  .main-content {
+    justify-content: center;
+    padding-bottom: 80px;
   }
 }
 </style>

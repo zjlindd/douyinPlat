@@ -12,10 +12,12 @@
       class="phone-input"
     >
       <template #prefix>
-        <el-icon><Phone /></el-icon>
+        <span class="input-label">尾号</span>
       </template>
       <template #suffix>
-        <el-icon :class="['valid-icon', { visible: isValid }]"><CircleCheckFilled /></el-icon>
+        <div class="suffix-decoration">
+          <span v-if="isValid" class="seal-text">吉</span>
+        </div>
       </template>
     </el-input>
   </div>
@@ -79,85 +81,82 @@ const handleQuery = () => {
 <style scoped>
 
 .phone-input-container {
-  width: 85%;
+  width: 90%;
   margin: 0 auto;
-  padding: 0 12px;
-  margin-top: 10px
+  padding: 0;
+  margin-top: 20px;
+  position: relative;
+  z-index: 10;
 }
 
 .phone-input {
   width: 100%;
 }
 
-.phone-input-container.valid :deep(.el-input__wrapper) {
-  width: 100%;
-  border: 2px solid #000;
-  box-shadow: 2px 2px 0px #000;
-  background: #f0fdf4; /* light green bg when valid */
-}
-
 :deep(.el-input__wrapper) {
   width: 100%;
-  height: 46px;
-  padding: 0 16px;
-  border-radius: 12px;
-  background: #fff;
-  border: 2px solid #000;
-  box-shadow: 3px 3px 0px #000;
-  transition: all 0.1s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  height: 60px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
 }
 
 :deep(.el-input__wrapper.is-focus) {
-  box-shadow: 1px 1px 0px #000;
-  transform: translate(2px, 2px);
+  box-shadow: 0 4px 20px rgba(192, 57, 43, 0.15);
+  border-color: #c0392b;
+  background: #fff;
 }
 
-:deep(.el-input__prefix),
-:deep(.el-input__suffix) {
-  display: flex;
-  align-items: center;
-  flex: 0 0 auto;
-}
-
-:deep(.el-input__prefix) {
-  margin-right: 8px;
-  color: #000;
-  font-size: 18px;
-}
-
-:deep(.el-input__suffix) {
-  margin-left: 8px;
+.input-label {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  color: #333;
+  font-size: 16px;
+  padding-right: 12px;
+  border-right: 1px solid #ddd;
+  margin-right: 4px;
 }
 
 :deep(.el-input__inner) {
-  font-weight: 900;
-  letter-spacing: 2px;
-  font-size: 18px;
-  color: #000;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 700;
+  letter-spacing: 4px;
+  font-size: 24px;
+  color: #c0392b;
   background: transparent;
   height: 100%;
+  text-align: center;
 }
 
 :deep(.el-input__inner::placeholder) {
-  color: #9ca3af;
-  font-weight: 500;
-  letter-spacing: 0;
-  font-size: 14px;
+  color: #bbb;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 1px;
 }
 
-.valid-icon {
-  color: #059669;
-  font-size: 20px;
-  opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  transform: scale(0.8);
+.suffix-decoration {
+  display: flex;
+  align-items: center;
 }
-.valid-icon.visible {
-  opacity: 1;
-  transform: scale(1);
+
+.seal-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #c0392b;
+  color: #c0392b;
+  font-family: 'Ma Shan Zheng', cursive;
+  border-radius: 4px;
+  font-size: 16px;
+  transform: rotate(15deg);
+  opacity: 0.8;
 }
 
 </style>
