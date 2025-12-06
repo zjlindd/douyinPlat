@@ -1,5 +1,5 @@
 
-import { Grade, type TailNumberAnalysis } from '../../types/phone'
+import type { TailNumberAnalysis } from '../../types/phone'
 import { SUGGESTIONS_POOL, BLESSINGS_POOL } from './suggestion_data'
 
 /**
@@ -15,7 +15,7 @@ function getFromPool(pool: string[], tailNumber: string): string {
  * 生成使用建议（唯美风格）
  */
 export function generateSuggestion(analysis: TailNumberAnalysis): string {
-  const { grade, pattern, patternType, tailNumber } = analysis
+  const { pattern, patternType, tailNumber } = analysis
 
   // 优先基于特殊模式的建议
   if (patternType === '1314') {

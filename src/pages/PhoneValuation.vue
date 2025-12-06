@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onUnmounted, onMounted } from 'vue'
+import { ref, onUnmounted, onMounted } from 'vue'
 const GlobalEP: any = (window as any).ElementPlus
 import PhoneInput from '../components/phone/PhoneInput.vue'
 import { defineAsyncComponent } from 'vue'
@@ -80,7 +80,7 @@ const ResultCard = defineAsyncComponent(() => import('../components/phone/Result
 import { validateTailNumber, extractTailNumber } from '../utils/phone/phoneValidator'
 import { analyzeTailNumber } from '../utils/phone/valuation'
 import { generateSuggestion, generateBlessing } from '../utils/phone/suggestions'
-import type { TailNumberAnalysis, Grade as GradeType } from '../types/phone'
+import type { TailNumberAnalysis } from '../types/phone'
 
 const loading = ref(false)
 const result = ref<TailNumberAnalysis | null>(null)
