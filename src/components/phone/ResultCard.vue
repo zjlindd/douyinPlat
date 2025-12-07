@@ -2,7 +2,13 @@
   <div v-if="analysis" class="result-card ink-card">
     <div class="close-btn" @click="$emit('close')">×</div>
     <div class="ink-card-header">
-      <span class="title-text">签文</span>
+      <span class="title-text">解读</span>
+      
+      <div class="audio-control" @click="toggleSpeech" :class="{ playing: isSpeaking }">
+        <span class="icon">{{ isSpeaking ? '🔊' : '🔈' }}</span>
+        <span class="text">{{ isSpeaking ? '停止' : '播报' }}</span>
+      </div>
+
       <div class="grade-badge" :class="analysis.grade.toLowerCase()">
         <span class="grade-char">{{ getChineseGrade(analysis.grade) }}</span>
         <span class="grade-desc">{{ analysis.gradeInfo.name }}</span>
@@ -18,13 +24,13 @@
               <span class="info-value highlight-value">{{ analysis.tailNumber }}</span>
             </div>
             <div class="info-cell">
-              <span class="info-label">卦象</span>
+              <span class="info-label">印象</span>
               <span class="info-value pattern-value">{{ analysis.pattern }}</span>
             </div>
           </div>
           
           <div class="price-section">
-            <span class="info-label">预估身价</span>
+            <span class="info-label">预估价值</span>
             <div class="price-display">
               <span class="currency">¥</span>
               <span class="price-value">{{ analysis.price.toLocaleString() }}</span>
@@ -39,7 +45,7 @@
           <div class="ink-box suggestion-box">
             <div class="box-title">
               <span class="icon">📜</span>
-              <span>判词</span>
+              <span>分析</span>
             </div>
             <div class="box-content">{{ analysis.suggestion }}</div>
           </div>
@@ -47,7 +53,7 @@
           <div class="ink-box blessing-box">
             <div class="box-title">
               <span class="icon">🏮</span>
-              <span>吉言</span>
+              <span>寄语</span>
             </div>
             <div class="box-content">{{ analysis.blessing }}</div>
           </div>
@@ -56,21 +62,62 @@
     </div>
     
     <div class="card-footer-tip">
-        温馨提示：数字能量仅供娱乐参考，命运掌握在自己手中 
+        温馨提示：本结果仅供娱乐互动，请勿迷信，美好生活靠自己创造
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onUnmounted } from 'vue'
 import type { TailNumberAnalysis, Grade } from '../../types/phone'
 
-defineProps<{
+const props = defineProps<{
   analysis: TailNumberAnalysis | null
 }>()
 
 defineEmits<{
   (e: 'close'): void
 }>()
+
+const isSpeaking = ref(false)
+
+const toggleSpeech = () => {
+  if (isSpeaking.value) {
+    window.speechSynthesis.cancel()
+    isSpeaking.value = false
+  } else {
+    if (!props.analysis) return
+    
+    // 构建朗读文本
+    const text = `您的手机尾号估值结果已经出来了。
+      尾号为${props.analysis.tailNumber}的家人。
+      尾号印象评分为：${props.analysis.pattern}。
+      尾号预估价格：${props.analysis.price}元。
+      尾号分析：${props.analysis.suggestion}
+      祝大哥大姐：${props.analysis.blessing}`
+    
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang = 'zh-CN'
+    utterance.rate = 1.0
+    utterance.pitch = 1.0
+    
+    utterance.onend = () => {
+      isSpeaking.value = false
+    }
+    utterance.onerror = (e) => {
+      console.error('Speech synthesis error:', e)
+      isSpeaking.value = false
+    }
+    
+    window.speechSynthesis.cancel()
+    window.speechSynthesis.speak(utterance)
+    isSpeaking.value = true
+  }
+}
+
+onUnmounted(() => {
+  window.speechSynthesis.cancel()
+})
 
 const getChineseGrade = (grade: Grade) => {
   const map: Record<string, string> = {
@@ -92,6 +139,44 @@ const getChineseGrade = (grade: Grade) => {
   position: relative;
   z-index: 10;
   animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.audio-control {
+  margin-left: auto;
+  margin-right: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  color: #666;
+  background: rgba(0,0,0,0.03);
+  padding: 4px 10px;
+  border-radius: 16px;
+  transition: all 0.3s;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.audio-control:hover {
+  background: rgba(0,0,0,0.06);
+  transform: translateY(-1px);
+}
+
+.audio-control.playing {
+  color: #ff4400;
+  background: rgba(255, 68, 0, 0.08);
+  border-color: rgba(255, 68, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.audio-control .icon {
+  margin-right: 4px;
+  font-size: 14px;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 68, 0, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(255, 68, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 68, 0, 0); }
 }
 
 @keyframes popIn {

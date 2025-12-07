@@ -16,7 +16,7 @@
       </template>
       <template #suffix>
         <div class="suffix-decoration">
-          <span v-if="isValid" class="seal-text">吉</span>
+          <span v-if="isValid" class="seal-text">鉴</span>
         </div>
       </template>
     </el-input>

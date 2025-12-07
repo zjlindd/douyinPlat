@@ -53,7 +53,6 @@
         <el-switch
           v-model="isAutoMode"
           inline-prompt
-          active-text="演示"
           inactive-text="关"
           @change="handleAutoSwitch"
           style="--el-switch-on-color: #10b981; --el-switch-off-color: #ef4444;"

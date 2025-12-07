@@ -8,8 +8,8 @@
       <!-- 主要内容区域（输入态） -->
       <div class="main-content" :class="{ 'has-result': !!result }">
         <div class="header">
-          <h1 class="title">数字能量 ‧ 运势详解</h1>
-          <p class="subtitle">万物皆有数，一测便知吉凶</p>
+          <h1 class="title">手机尾号 ‧ 趣味解读</h1>
+          <p class="subtitle">仅供娱乐 ‧ 探索数字魅力</p>
         </div>
 
         <PhoneInput
@@ -37,13 +37,13 @@
 
       <div class="live-notice-bar">
         <div class="notice-content">
-          <span class="notice-item"><i class="icon">👍</i> 免费测算：点赞关注</span>
+          <span class="notice-item"><i class="icon">👍</i>点赞关注免费解读</span>
           <span class="separator">|</span>
-          <span class="notice-item"><i class="icon">💖</i> 优先：3个小心心</span>
+          <span class="notice-item"><i class="icon">💖</i> 3个小心心优先</span>
           <span class="separator">|</span>
-          <span class="notice-item highlight"><i class="icon">🍭</i> 插队：棒棒糖</span>
+          <span class="notice-item highlight"><i class="icon">🍭</i>棒棒糖插队</span>
           <span class="separator">|</span>
-          <span class="notice-item highlight-vip"><i class="icon">🕶️</i> 立即安排：墨镜</span>
+          <span class="notice-item highlight-vip"><i class="icon">🕶️</i>墨镜立即安排</span>
         </div>
       </div>
 
@@ -54,7 +54,6 @@
           <el-switch
             v-model="isAutoMode"
             inline-prompt
-            active-text="演示"
             inactive-text="关"
             @change="handleAutoSwitch"
             style="--el-switch-on-color: #c0392b; --el-switch-off-color: #7f8c8d;"
@@ -328,7 +327,7 @@ const handleCloseResult = () => {
 
 .title {
   font-family: 'Ma Shan Zheng', cursive;
-  font-size: 48px; /* 加大标题 */
+  font-size: 34px; /* 加大标题 */
   font-weight: 400;
   margin: 0 0 12px 0;
   color: #c0392b;
@@ -388,7 +387,7 @@ const handleCloseResult = () => {
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: #555;
+  color: #fc0d0d;
   font-weight: 500;
 }
 
@@ -424,6 +423,8 @@ const handleCloseResult = () => {
   position: fixed;
   right: 0;
   bottom: 30px;
+  transform: scale(0.5);
+  transform-origin: right bottom;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   padding: 8px 4px 8px 12px;
@@ -519,25 +520,5 @@ const handleCloseResult = () => {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-@media (max-width: 480px) {
-  .app-container {
-    padding: 16px 12px 100px;
-    max-width: 100%;
-  }
-
-  .title {
-    font-size: 40px;
-  }
-
-  .subtitle {
-    font-size: 14px;
-  }
-  
-  .main-content {
-    justify-content: center;
-    padding-bottom: 80px;
-  }
 }
 </style>

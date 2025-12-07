@@ -25,22 +25,22 @@ export function generateSuggestion(analysis: TailNumberAnalysis): string {
     return '爱意满满，浪漫天成。此号蕴含甜蜜气息，愿您的生活充满温情与感动。'
   }
   if (patternType === '1688') {
-    return '一路发发，财运亨通。此号吉祥如意，适合经商或创业使用，助您事业腾飞。'
+    return '一路生花，前程似锦。此号寓意吉祥，适合经商或创业使用，助您事业腾飞。'
   }
   if (patternType === 'YEAR') {
     return '岁月如歌，铭记此刻。此号如时光胶囊，珍藏专属记忆，适合作为纪念号使用。'
   }
   if (patternType === 'BAAA' || patternType === 'AAAB') {
-    return '三阳开泰，气势非凡。此号重复律动，易记且朗朗上口，彰显独特个性。'
+    return '律动优美，气势非凡。此号重复律动，易记且朗朗上口，彰显独特个性。'
   }
   if (patternType === 'ABBA') {
     return '镜像之美，回环往复。此号结构精巧，给人以对称和谐之感，品味独到。'
   }
   if (pattern.includes('四连号')) {
-    return '四星连珠，世所罕见。此号珍稀如钻，值得作为传家之宝长久珍藏。'
+    return '数字连珠，世所罕见。此号珍稀如钻，值得作为传家之宝长久珍藏。'
   }
   if (pattern.includes('顺子')) {
-    return '步步高升，顺风顺水。此号音韵流畅，寓意事业生活节节向上。'
+    return '步步高升，顺心顺意。此号音韵流畅，寓意事业生活节节向上。'
   }
   if (pattern.includes('AABB') || pattern.includes('ABAB')) {
     return '成双成对，和谐对称。此号朗朗上口，给人以平衡稳重之感。'
