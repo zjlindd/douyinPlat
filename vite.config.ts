@@ -76,10 +76,10 @@ export default defineConfig(({ mode }) => {
     open: true,
     proxy: {
       '/api/name-scoring': {
-        target: 'https://api.yuanfenju.com',
+        target: 'http://52tuhu.cn',
         changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/api\/name-scoring/, '/index.php/v1/Dafen/xingming')
+        secure: false,
+        rewrite: (path) => path
       },
       '/api/wordart-texture': {
         target: 'https://dashscope.aliyuncs.com',
