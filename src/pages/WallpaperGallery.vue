@@ -218,7 +218,7 @@ onUnmounted(() => {
 .wallpaper-img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* 保持比例，完整显示 */
+  object-fit: cover; /* 保持比例，完整显示 */
   /* 如果想要全屏填充（可能会裁剪），可以使用 object-fit: cover */
 }
 

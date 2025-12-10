@@ -117,9 +117,7 @@ interface NameScoringResponse {
   }
 }
 
-const API_URL = import.meta.env.DEV ? '/api/name-scoring' : (import.meta.env.VITE_NAME_SCORING_API_URL || 'https://api.yuanfenju.com/index.php/v1/Dafen/xingming')
-const API_KEY = import.meta.env.VITE_NAME_SCORING_API_KEY || 'sXFpwpk5qCwWSA8fU0i5IW4ic'
-
+const API_URL = import.meta.env.DEV ? '/api/name-scoring' : 'https://52tuhu.cn/api/name-scoring/'
 const nameInput = ref('')
 const loading = ref(false)
 const error = ref('')
@@ -142,18 +140,11 @@ const handleSubmit = async () => {
   error.value = ''
   data.value = null
   notice.value = ''
-
   const name = nameInput.value.trim()
   if (!name) return
-
-  if (!API_KEY) {
-    error.value = '缺少 API Key，请在 .env 中配置 VITE_NAME_SCORING_API_KEY'
-    return
-  }
-
   loading.value = true
   try {
-    const params = new URLSearchParams({ api_key: API_KEY, name })
+    const params = new URLSearchParams({ name })
     const resp = await fetch(`${API_URL}?${params.toString()}`, { method: 'GET' })
     const json = (await resp.json()) as NameScoringResponse
     notice.value = json.notice || ''
