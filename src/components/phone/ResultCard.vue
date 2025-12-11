@@ -89,7 +89,7 @@ const toggleSpeech = () => {
     if (!props.analysis) return
     
     // 构建朗读文本
-    const text = `您的手机尾号估值结果已经出来了。
+    const text = `
       尾号为${props.analysis.tailNumber}的家人。
       尾号印象评分为：${props.analysis.pattern}。
       尾号预估价格：${props.analysis.price}元。
