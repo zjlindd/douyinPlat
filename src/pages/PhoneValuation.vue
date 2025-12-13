@@ -327,7 +327,7 @@ const handleCloseResult = () => {
 
 .title {
   font-family: 'Ma Shan Zheng', cursive;
-  font-size: 34px; /* 加大标题 */
+  font-size: 30px; /* 加大标题 */
   font-weight: 400;
   margin: 0 0 12px 0;
   color: #c0392b;
@@ -422,13 +422,12 @@ const handleCloseResult = () => {
 .floating-switch {
   position: fixed;
   right: 0;
-  bottom: 30px;
-  transform: scale(0.5);
+  bottom: 40px;
   transform-origin: right bottom;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  padding: 8px 4px 8px 12px;
-  border-radius: 24px 0 0 24px;
+  padding: 10px 6px 10px 14px;
+  border-radius: 30px 0 0 30px;
   box-shadow: -2px 2px 8px rgba(0,0,0,0.1);
   display: flex;
   align-items: center;
@@ -438,13 +437,15 @@ const handleCloseResult = () => {
   z-index: 100;
   border: 1px solid rgba(192, 57, 43, 0.2);
   border-right: none;
-  width: 36px; /* 收起时的宽度，只显示灯笼 */
+  width: 50px; /* 收起时的宽度，只显示灯笼 */
+  height: 50px;
+  box-sizing: border-box;
   overflow: hidden;
   white-space: nowrap;
 }
 
 .floating-switch.expanded {
-  width: 100px; /* 展开后的宽度 */
+  width: 120px; /* 展开后的宽度 */
   padding-right: 12px;
 }
 
@@ -454,11 +455,12 @@ const handleCloseResult = () => {
 }
 
 .switch-icon {
-  font-size: 18px;
+  font-size: 24px;
   margin-right: 0;
   flex-shrink: 0;
   filter: grayscale(0.1);
   transition: all 0.3s ease;
+  line-height: 1;
 }
 
 .floating-switch.expanded .switch-icon {
