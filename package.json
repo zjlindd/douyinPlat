@@ -21,7 +21,6 @@
   "license": "ISC",
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
-    "canvas-confetti": "^1.9.4",
     "element-plus": "^2.11.8",
     "vue": "^3.4.21",
     "vue-router": "^4.6.3"

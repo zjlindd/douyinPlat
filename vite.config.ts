@@ -50,7 +50,7 @@ export default defineConfig(({ mode }) => {
     }
   ],
   build: {
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1500,
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -65,8 +65,8 @@ export default defineConfig(({ mode }) => {
       output: {
         manualChunks: {
           'vue-vendor': ['vue', 'vue-router'],
-          'element-plus': ['element-plus', '@element-plus/icons-vue'],
-          'library': ['canvas-confetti']
+          'element-plus-icons': ['@element-plus/icons-vue'],
+          'element-plus': ['element-plus']
         }
       }
     }
