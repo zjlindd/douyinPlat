@@ -117,7 +117,7 @@ interface NameScoringResponse {
   }
 }
 
-const API_URL = import.meta.env.DEV ? '/api/name-scoring' : (import.meta.env.VITE_NAME_SCORING_API_URL || 'http://52tuhu.cn/api/name-scoring')
+const API_URL = import.meta.env.DEV ? '/api/name-scoring' : (import.meta.env.VITE_NAME_SCORING_API_URL || 'https://52tuhu.cn/api/name-scoring')
 const nameInput = ref('')
 const loading = ref(false)
 const error = ref('')
